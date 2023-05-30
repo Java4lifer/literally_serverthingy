@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Get sum files bruh</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+<body>
+    <script>
+        async function main() {
+            const request = await fetch("meusdados.txt")
+            const text = await request.text()
+            document.body.innerHTML = `<pre>${text}</pre>`
+        }
+        main();
+    </script>
+</body>
+</html>
