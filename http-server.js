@@ -1,28 +1,30 @@
-const expr = require("express")
+const express = require("express")
 const fs = require("fs")
-const app = expr()
+const app = express()
 
-app.use(expr.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/public'))
 
 app.use("/write", (req, res) => {
-    const { file, texto } = req.query
-    fs.writeFileSync(file, texto)
-    res.send(new Data())
-})
+    const { file, text } = req.query
+    fs.writeFileSync(file, text)
+    //write?file=chirno&text=baka
+    res.send(text) 
+  })
+
 app.use("/read", (req) => {
-    const {file} = req.query
+    const { file } = req.query
     fs.readFileSync(req.query.file)
 })
 
 app.use("/delete", (req) => {
-    const {file, texto} = req.query
-    fs.writeFileSync(file, texto)
+    const { file } = req.query
+    fs.rmFileSync(file, texto)
     
 })
 
 app.use("/patch", (req) => {
-    const {file, texto} = req.query
-    fs.writeFileSync(file, texto)
+    const {file, text} = req.query
+    fs.appendFileSync(file, text)
 
 })
 
