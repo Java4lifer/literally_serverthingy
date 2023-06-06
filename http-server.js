@@ -4,9 +4,10 @@ const app = expr()
 
 app.use(expr.static(__dirname + '/public'))
 
-app.use("/write", (req) => {
-    const {file, texto} = req.query
+app.use("/write", (req, res) => {
+    const { file, texto } = req.query
     fs.writeFileSync(file, texto)
+    res.send(new Data())
 })
 app.use("/read", (req) => {
     const {file} = req.query

@@ -14,10 +14,9 @@
             const month = new Date().getMonth()
             const day = new Date().getDay()
             text.forEach(pessoa => {
-                // transformar data em segundo e depois em ano sla
-                const yearday = (year-pessoa["data-nasc"][0])*365
-                const monday = (month-pessoa["data-nasc"][1])
-                const dayday = (day-pessoa["data-nasc"][2])
+                // const yearday = (year-pessoa["data-nasc"][0])*365
+                // const monday = (month-pessoa["data-nasc"][1])
+                // const dayday = (day-pessoa["data-nasc"][2])
                 document.body.innerHTML += `<button>
                     ${pessoa.nome}, 
                     ${year-pessoa["data-nasc"][0]}, 
