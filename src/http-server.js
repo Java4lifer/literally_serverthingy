@@ -8,6 +8,19 @@ const { getDBinst } = require("./database")
 
 const app = express()
 
+async function filmEX(title) {
+    const db = await getDBinst()
+    const result = await db.run(
+        `select * from films where titulo = ?`, [title]
+    )
+    if(result.length > 0) {
+        return true;
+    }
+    else {
+        return  false
+    }
+}
+
 app.use(express.static(__dirname + '/public'))
 
 app.use("/write", async (req, res) => {
@@ -24,30 +37,36 @@ app.use("/read", async (req, res) => {
     const { title } = req.query
     const db = await getDBinst()
     const result = await db.run(
-        `search in films(title) values(?)`,
+        `select * from films where title is ?`,
         [title]
     )
     res.send(result)
 })
 
-app.use("/delete", (req, res) => {
-    const { file } = req.query
-    fs.rmSync(file)
-    if(fs.existsSync(file)) {
-        res.send(`Arquivo '${file}' deletado com sucesso.`)
-    }
-    else {res.send(`Arquivo '${file}' não existe ou não foi encontrado.`)}
+app.use("/delete", async (req, res) => {
+    const { title } = req.query
+    const db = await getDBinst()
+    const result = await db.run(
+        `delete from films where titulo = ?`,
+        [title]
+    )
+    res.send(`Filme deletado.`)
 })
 
-app.use("/patch", (req, res) => {
-    const {file, text} = req.query
-    const textold = fs.readFileSync(file)
-    if(fs.existsSync(file)) {
-        fs.writeFileSync(file, text, {encoding:'utf8',flag:'w'})
-        res.send(`Conteudo do arquivo '${file}' foi alterado de: '${textold}', para: '${text}'`)
-    }
-    else {res.send(`Arquivo '${file}' não existe ou não foi encontrado.`)}
+app.use("/patch", async (req, res) => {
+    const { title, source, description, thumb } = req.query
+    const db = await getDBinst()
+    const result = await db.run(
+        `update films
+        set source = ?;
+            description = ?;
+            thumb = ?
+        where title = ?`,
+        [title],
+    )
+    res.send(result)
 })
+
 const port = 3000
 app.listen(port, () => console.log(`Servidor rodando de boa na porta: ${port}.`))
 
