@@ -4,9 +4,34 @@
     <meta charset='utf-8'>
     <title>Get sum files bruh</title>
     <link type='text/css' media='screen'>
+    <style>
+        body {
+            background-color: rgba(0, 0, 0, 0.932);
+        }
+        h1 {
+            color: white;
+        }
+        p {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: medium;
+            padding-left: 2em;
+            color: rgb(223, 223, 19);
+        }
+        p span.extext {
+            color: rgb(30, 182, 202)
+        }
+    </style>
 </head>
 <body>
-    <script>
+    <h1>Try the following:</h1>
+    <br>
+    <div>
+    <p>/write?file=<span class="extext">filename</span>&text=<span class="extext">string</span></p>
+    <p>/patch?file=<span class="extext">filename</span>&text=<span class="extext">string</span></p>
+    <p>/read?file=<span class="extext">filename</span></p>
+    <p>/delete?file=<span class="extext">filename</span></p>
+    </div>
+    <!-- <script>
         async function main() {
             const request = await fetch("meusdados.json")
             const text = await request.json()
@@ -26,6 +51,6 @@
             })
         }
         main();
-    </script>
+    </script> -->
 </body>
 </html>
