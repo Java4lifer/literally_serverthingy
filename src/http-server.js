@@ -1,22 +1,33 @@
 const express = require("express")
 const fs = require("fs")
+const { getDBinst } = require("./database")
+// destrutores
+// let x = ["hi", "hoi", "nein"]
+// let {, , german} = x
+// german = nein
+
 const app = express()
 
 app.use(express.static(__dirname + '/public'))
 
-app.use("/write", (req, res) => {
-    const { file, text } = req.query
-    fs.writeFileSync(file, text)
-    //write?file=chirno&text=baka
-    res.send(`O arquivo '${file}' foi criado com o seguinte conteudo: '${text}'`) 
+app.use("/write", async (req, res) => {
+    const { title, source, description, thumb } = req.query
+    const db = await getDBinst()
+    const result = await db.run(
+        `insert into films(title, source, description, thumb) values(?,?,?,?)`, 
+        [title, source, description, thumb]
+        )
+    res.send(result) 
   })
 
-app.use("/read", (req, res) => {
-    const { file } = req.query
-    if(fs.existsSync(file)) {
-        res.send(`Lendo o arquivo: ${file} <br><br>'${fs.readFileSync(file)}'`)
-    }
-    else {res.send(`Arquivo '${file}' não existe ou não foi encontrado.`)}
+app.use("/read", async (req, res) => {
+    const { title } = req.query
+    const db = await getDBinst()
+    const result = await db.run(
+        `search in films(title) values(?)`,
+        [title]
+    )
+    res.send(result)
 })
 
 app.use("/delete", (req, res) => {
