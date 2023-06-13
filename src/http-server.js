@@ -8,20 +8,20 @@ const { getDBinst } = require("./database")
 
 const app = express()
 
-async function filmEX(title) {
-    const db = await getDBinst()
-    const result = await db.run(
-        `select * from films where titulo = ?`, [title]
-    )
-    if(result.length > 0) {
-        return true;
-    }
-    else {
-        return  false
-    }
-}
+// async function filmEX(title) {
+//     const db = await getDBinst()
+//     const result = await db.run(
+//         `select * from films where titulo = ?`, [title]
+//     )
+//     if(result.length > 0) {
+//         return true;
+//     }
+//     else {
+//         return  false
+//     }
+// }
 
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/../public'))
 
 app.use("/write", async (req, res) => {
     const { title, source, description, thumb } = req.query
@@ -34,35 +34,36 @@ app.use("/write", async (req, res) => {
   })
 
 app.use("/read", async (req, res) => {
-    const { title } = req.query
+    const { id } = req.query
     const db = await getDBinst()
-    const result = await db.run(
-        `select * from films where title is ?`,
-        [title]
+    const result = await db.get(
+        `select * from films where id is ?`,
+        [id]
     )
     res.send(result)
 })
 
 app.use("/delete", async (req, res) => {
-    const { title } = req.query
+    const { id } = req.query
     const db = await getDBinst()
     const result = await db.run(
-        `delete from films where titulo = ?`,
-        [title]
+        `delete from films where id = ?`,
+        [id]
     )
     res.send(`Filme deletado.`)
 })
 
 app.use("/patch", async (req, res) => {
-    const { title, source, description, thumb } = req.query
+    const { id, title, source, description, thumb } = req.query
     const db = await getDBinst()
     const result = await db.run(
         `update films
-        set source = ?;
+        set title = ?;
+            source = ?;
             description = ?;
             thumb = ?
-        where title = ?`,
-        [title],
+        where id = ?`,
+        [id],
     )
     res.send(result)
 })

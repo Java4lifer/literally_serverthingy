@@ -12,7 +12,7 @@ async function getDBinst() {
     // const dabase = await open(dbs)
     await dabase.exec(`
     create table if not exists films (
-        id int primary key autoincrement,
+        id integer primary key autoincrement,
         title text not null,
         source text not null,
         description text,
