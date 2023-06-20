@@ -1,0 +1,9 @@
+put http://127.0.0.1:3000/films?id=1 http/1.1
+content-type: application/json
+
+{
+  "title": "Cirno's revenge",
+  "source": "touhou 16",
+  "description": "Cirno is mad at Okina",
+  "thumb": "Okina breaking Cirno's neck"
+}
