@@ -2,55 +2,68 @@
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>Get sum files bruh</title>
-    <link type='text/css' media='screen'>
-    <style>
-        body {
-            background-color: rgba(0, 0, 0, 0.932);
-        }
-        h1 {
-            color: white;
-        }
-        p {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: medium;
-            padding-left: 2em;
-            color: rgb(223, 223, 19);
-        }
-        p span.extext {
-            color: rgb(30, 182, 202)
-        }
-    </style>
+    <title>Pain</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
 </head>
 <body>
-    <h1>Try the following:</h1>
-    <br>
-    <div>
-    <p>/write?file=<span class="extext">filename</span>&text=<span class="extext">string</span></p>
-    <p>/patch?file=<span class="extext">filename</span>&text=<span class="extext">string</span></p>
-    <p>/read?file=<span class="extext">filename</span></p>
-    <p>/delete?file=<span class="extext">filename</span></p>
-    </div>
-    <!-- <script>
-        async function main() {
-            const request = await fetch("meusdados.json")
-            const text = await request.json()
-            const year = new Date().getFullYear()
-            const month = new Date().getMonth()
-            const day = new Date().getDay()
-            text.forEach(pessoa => {
-                // const yearday = (year-pessoa["data-nasc"][0])*365
-                // const monday = (month-pessoa["data-nasc"][1])
-                // const dayday = (day-pessoa["data-nasc"][2])
-                document.body.innerHTML += `<button>
-                    ${pessoa.nome}, 
-                    ${year-pessoa["data-nasc"][0]}, 
-                    ${pessoa["stand-user"] ? "ENEMY":"Ally"}
-                    </button>
-                <br>`
-            })
-        }
-        main();
-    </script> -->
+    <form>
+        <div>
+            <label for="title">INPUTETH TITLEH</label>
+            <input name="title" id="title">
+        </div>
+        <div>
+            <label for="source">INPUTETH SAUCE</label>
+            <input name="source" id="source">
+        </div>
+        <div>
+            <label for="description">INPUTETH DESCREPT</label>
+            <input name="description" id="description">
+        </div>
+        <div>
+            <label for="thumb">INPUTETH THUMEBETH</label>
+            <input name="thumb" id="thumb">
+        </div>
+        <div>
+            <button>DO THINGS</button>
+        </div>
+    </form>
+    
+    <ul class="film-list">
+        
+    </ul>
+
+     <script>
+        const domfilmlist = document.querySelector("ul.film-list")
+        async function listallfilms() {
+            const resp = await fetch("/films")
+            const films = await resp.json()
+            films.forEach(film => {
+                domfilmlist.innerHTML += `
+            <li>
+                <strong>Teh TITLETH -- </strong>
+                ${film.title}
+                <ul>
+                    <li>
+                        <strong>Teh SAUCE -- </strong>
+                        ${film.source}
+                    </li>
+                    <li>
+                        <strong>Teh DESCREPT -- </strong>
+                        ${film.description}
+                    </li>
+                    <li>
+                        <strong>Teh THUMBETH -- </strong>
+                        ${film.thumb}
+                    </li>
+                </ul>
+             </li>
+             <br>
+            `})
+            }
+        listallfilms()
+        window.open("google.com")
+        </script>
 </body>
+dis colors art quite harmful f'r mine own circular, ocular objects!
 </html>

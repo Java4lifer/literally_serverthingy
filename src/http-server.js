@@ -70,27 +70,28 @@ app.put("/films", async (req, res) => {
 
 app.patch("/films", async (req, res) => {
     const { id } = req.query
-    const alts = []
-    const reqs = req.body
+    const reqs = [...Object.values(req.body), id]
+    //const alts = Object.keys(req.body).join(", ") + "=?"
+    const alts = Object.keys(req.body).map(k => `${k}=?`).join(", ")
     const db = await getDBinst()
-    for(objs in req.body) {
-        alts.push(`${objs} = ?`)
-        //reqs.push(objs)
-    }
-    const altstr = alts.toString()
-    console.log(`${altstr}\n${reqs}`)
+    // for(objs in req.body) {
+    //     alts.push(`${objs} = ?`)
+    // }
+    // const altstr = alts.toString()
+    //console.log(`${altstr}\n${reqs}`)
     if(id){
         const result = await db.run(
            `update films
-            set ${altstr}
+            set ${alts}
             where id = ?`,
-            [reqs, id]
+            reqs
       )
         res.json(reqs)
-        for(var keys in reqs){
-            console.log(keys) //source, thumb
-            console.log(reqs[keys]) //Touhou Project 12.8, None
-        }
+    }
+        // for(var keys in reqs){
+        //     console.log(keys) //source, thumb
+        //     console.log(reqs[keys]) //Touhou Project 12.8, None
+        // }
 })
 
 const port = 3000
