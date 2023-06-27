@@ -2,8 +2,8 @@ post http://127.0.0.1:3000/films http/1.1
 content-type: application/json
 
 {
-  "title": "Chirnos rising revengeance",
-  "source": "touhou 12.8",
-  "description": "Chirno is mad at Junko's sister",
-  "thumb": "cirno"
+  "title": "Chirnos death",
+  "source": "touhou 16",
+  "description": "Chirno is mad at Junko",
+  "thumb": "cirno dying"
 }
