@@ -1,0 +1,4 @@
+do the buttons
+fix login
+do player list loader
+load the database instead

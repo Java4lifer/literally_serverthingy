@@ -1,0 +1,127 @@
+* {
+    box-sizing: border-box;
+}
+@font-face {
+    font-family: "Sans";
+    src: url(img/COMIC.TTF) format("truetype");
+}
+div.ia21-play { 
+    font-family: "Sans", Verdana, Tahoma;
+}
+body {
+    background-color: rgba(15, 15, 15, 0.938);
+}
+div.ia21-play {
+    border: 2.5px solid rgb(5, 5, 5);
+    /* display: inline-block; */
+    width: 750px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 3rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+div.ia21-play video {
+    width: 100%;
+
+}
+div.ia21-play div.controllers {
+    display: flex;
+    color:white;
+    background-color: rgb(20, 19, 19);
+    border-top: 1px solid black;
+    column-gap: 1em;
+    padding-right: 1em;
+}
+div.ia21-play div.controllers button.play-pause{
+    background-color: transparent;
+    border: 0 none;
+    border-right: 1px solid black;
+    color:white;
+    cursor: pointer;
+    font-size: 1em;
+    padding: .5em;
+    line-height: 1em;
+    height: 2em;
+}
+div.ia21-play div.controllers div.dragbar:before {
+    content: " ";
+    position: absolute;
+    border-top: 3px solid white;
+    width: 100%;
+    top: calc(50% - 1.5px );
+    /*Para deixar no meio é 50% menos metade da largura da div: 1px > 0.5px*/
+}
+div.ia21-play div.controllers div.dragbar {
+    flex-grow: 1;
+    position: relative;
+    cursor:pointer;
+}
+div.ia21-play div.controllers div.dragbar div.draggable {
+    --percent: 0;
+    background-color: white;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    position: absolute;
+    top: calc(50% - 0.5rem);
+    left: calc(var(--percent) - 0.5rem);
+    pointer-events: none;
+}
+
+div.ia21-play div.title {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 2px solid black;
+    color:white;
+    background-color: rgb(20, 19, 19);
+    border-top: 2px solid black;
+    column-gap: 1em;
+    padding-left: 0.5em;
+    padding-top: 0.2em;
+    padding-bottom: 0.1em;
+    font-size: 1.5em;
+}
+div.ia21-play div.desc {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 2px solid black;
+    color:white;
+    background-color: rgb(20, 19, 19);
+    border-top: 2px solid black;
+    column-gap: 1em;
+    padding-left: 0.5em;
+    padding-top: 0.2em;
+    padding-bottom: 0.1em;
+    font-size: 1em;
+}
+div.ia21-play div.lerbt {
+    margin-left: auto;
+    width: fit-content;
+    height: fit-content;
+    padding-right: 0.3rem;
+}
+div.ia21-play div.lerbt button{
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+div.ia21-play div.controllers div.timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.ia21-play div.playlist {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

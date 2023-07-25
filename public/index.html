@@ -7,7 +7,24 @@
     <script src='main.js'></script>
 </head>
 <body>
-    <form>
+<!-- ------------✂----------------------------------------------------- -->    
+    <dialog>
+        <header>
+            <h1>Login</h1>
+        </header>
+        <main>
+            <form action="dialog"></form>
+            <input placeholder="User" name="login">
+            <input placeholder="Password" name="password">
+        </main>
+        <footer>
+            <div class="msg"></div>
+            <button class="bt-send">Log</button>
+            <button class="bt-die">Cancer</button>
+        </footer>
+    </dialog>
+<!-- ------------✂----------------------------------------------------- -->
+    <form class="alt-form">
         <div>
             <label for="title">INPUTETH TITLEH</label>
             <input name="title" id="title">
@@ -34,35 +51,100 @@
     </ul>
 
      <script>
-        const domfilmlist = document.querySelector("ul.film-list")
+        const dialog = document.querySelector("dialog")
+        const logform = dialog.querySelector("form")
+        const btsend = dialog.querySelector(".bt-send")
+        const btdie= dialog.querySelector(".bt-die")
+        const logmsg= dialog.querySelector(".msg")
+        const filmlist = document.querySelector("ul.film-list")
+        const altform = document.querySelector("form.alt-form") 
+
+        //------------✂-----------------------------------------------------
+
+        if(!localStorage.getItem("token")) {
+            dialog.showModal()
+        } else {
+            listallfilms()
+        }
+
+        btsend.addEventListener("click", async ev =>{
+            const { login, senha } = logform
+            const response = await fetch(`/login?login=${login.value}&senha=${senha.value}`)
+            const data = await response.json()
+            if(data.token) {
+                localStorage.setItem('token', data.token)
+                dialog.close()
+                listarallfilms()
+                return
+            }
+            logmsg.innerHTML = `<strong>User and/or password suck.</strong>`
+        })
+
+        //------------✂-----------------------------------------------------
+        
         async function listallfilms() {
-            const resp = await fetch("/films")
+            const resp = await fetch(`/films?token=${localStorage.getItem("token")}`)
+            filmlist.innerHTML = ""
             const films = await resp.json()
             films.forEach(film => {
-                domfilmlist.innerHTML += `
-            <li>
-                <strong>Teh TITLETH -- </strong>
-                ${film.title}
-                <ul>
+                filmlist.innerHTML += `
                     <li>
-                        <strong>Teh SAUCE -- </strong>
-                        ${film.source}
+                        <strong>Teh TITLETH -- </strong>
+                        ${film.title}
+                        <ul class="things">
+                            <li class="fid">
+                                <strong>Teh ID -- </strong>
+                                ${film.id}
+                            </li>
+                            <li class="fsource">
+                                <strong>Teh SAUCE -- </strong>
+                                ${film.source}
+                            </li>
+                            <li class="fdescription">
+                                <strong>Teh DESCREPT -- </strong>
+                                ${film.description}
+                            </li>
+                            <li class="fthumb">
+                                <strong>Teh THUMBETH -- </strong>
+                                ${film.thumb}
+                            </li>
+                        </ul>
+                        <br>
+                            <button class="deleter">DELETETH</button>
+                            <button class="alterer">ALTERETH</button>
                     </li>
-                    <li>
-                        <strong>Teh DESCREPT -- </strong>
-                        ${film.description}
-                    </li>
-                    <li>
-                        <strong>Teh THUMBETH -- </strong>
-                        ${film.thumb}
-                    </li>
-                </ul>
-             </li>
-             <br>
-            `})
+                    <br>
+                    `
+                })
             }
-        listallfilms()
-        window.open("google.com")
+        
+        //use target
+        const filmobj = filmlist.querySelector("li button.deleter")
+        filmobj.addEventListener("submit", async ev =>{
+            console.log("Works")
+        })
+
+        altform.addEventListener("submit", async ev =>{
+            ev.preventDefault()
+            ev.stopPropagation()
+            ev.stopImmediatePropagation()
+
+            const body = JSON.stringify({
+                title: altform.title.value,
+                source: altform.source.value,
+                description: altform.description.value,
+                thumb: altform.thumb.value
+            })
+
+            const response = await fetch(`/films?token=${localStorage.getItem("token")}`, {
+                method: "POST",
+                headers: {"Content-type": "application/json"},
+                body
+            })
+            const result = await response.json()
+            altform.reset()
+            listallfilms()
+        })
         </script>
 </body>
 dis colors art quite harmful f'r mine own circular, ocular objects!

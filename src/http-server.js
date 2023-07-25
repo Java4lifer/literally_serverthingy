@@ -1,7 +1,7 @@
+const crypto = require("crypto")
 const express = require("express")
 const fs = require("fs")
 const { getDBinst } = require("./database")
-const { debugPort, title } = require("process")
 // destrutores
 // let x = ["hi", "hoi", "nein"]
 // let {, , german} = x
@@ -12,7 +12,29 @@ app.use(express.static(__dirname + '/../public'))
 app.use(express.json())
 //write?title=a&source=a&description=a&thumb=a
 
-app.post("/films", async (req, res) => {
+const tokens = []
+
+function logged(req, res, next) {
+    const { token } = req.query
+    if (tokens.includes(token)) {
+        next()
+        return
+    }
+    res.status(400).json({ error: true, msg: "Token invalid" })
+}
+
+app.get("/login", (req, res) => {
+    const { login, senha } = req.query
+        if (login == "daniel" && senha == "123") {
+            const hash = crypto.randomBytes(20).toString("hex") 
+            tokens.push(hash)
+            res.json({ error: false, token: hash })
+            return
+        }
+    res.status(400).json({ error: true, msg: "No bitches👍" })
+})
+
+app.post("/films", logged, async (req, res) => {
     const { title, source, description, thumb } = req.body
     
     const db = await getDBinst()
@@ -23,8 +45,8 @@ app.post("/films", async (req, res) => {
     res.json(result) 
   })
 
-app.get("/films", async (req, res) => {
-    const { id } = req.query
+app.get("/films", logged, async (req, res) => {
+    const { id } = req.params
     const db = await getDBinst()
     if(id){
         const result = await db.get(
@@ -34,11 +56,11 @@ app.get("/films", async (req, res) => {
         res.json(result)
         return
     }
-    const result = await db.all(`select * from films`)
-    res.send(result)
+    const result = await db.all(`select * from films order by id desc`)
+    res.json(result)
 })
 
-app.delete("/films", async (req, res) => {
+app.delete("/films", logged, async (req, res) => {
     const { id } = req.query
     const db = await getDBinst()
     if(id){
@@ -50,7 +72,7 @@ app.delete("/films", async (req, res) => {
         }
 })
 
-app.put("/films", async (req, res) => {
+app.put("/films", logged, async (req, res) => {
     const { id } = req.query
     const { title, source, description, thumb } = req.body
     const db = await getDBinst()
@@ -68,7 +90,7 @@ app.put("/films", async (req, res) => {
         }
 })
 
-app.patch("/films", async (req, res) => {
+app.patch("/films", logged, async (req, res) => {
     const { id } = req.query
     const reqs = [...Object.values(req.body), id]
     //const alts = Object.keys(req.body).join(", ") + "=?"
