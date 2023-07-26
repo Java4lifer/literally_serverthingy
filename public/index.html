@@ -3,9 +3,32 @@
 <head>
     <meta charset='utf-8'>
     <title>Pain</title>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
+    <link rel='stylesheet' type='text/css' media='screen'>
+    <!-- <script src='main.js'></script> -->
 </head>
+<style>
+    .alt-form, .listItem {
+        border: 5px solid black;
+        width: 50em;
+    }
+    form.alt-form>div {
+        margin-top: 0.8em;
+    }
+    form.alt-form button {
+        margin-bottom: 0.5em;
+        margin-left: 15em;
+    }
+    .listGblack {
+        color: white;
+        background-color: black;
+        font-size: 20px;
+        width: 100%;
+        height: 1.5em;
+    }
+    label {
+        font-size:18px;
+    }
+</style>
 <body>
 <!-- ------------✂----------------------------------------------------- -->    
     <dialog>
@@ -26,19 +49,19 @@
 <!-- ------------✂----------------------------------------------------- -->
     <form class="alt-form">
         <div>
-            <label for="title">INPUTETH TITLEH</label>
+            <label for="title">INPUTETH Titleh</label>
             <input name="title" id="title">
         </div>
         <div>
-            <label for="source">INPUTETH SAUCE</label>
+            <label for="source">INPUTETH Sauce</label>
             <input name="source" id="source">
         </div>
         <div>
-            <label for="description">INPUTETH DESCREPT</label>
+            <label for="description">INPUTETH Descrepteth</label>
             <input name="description" id="description">
         </div>
         <div>
-            <label for="thumb">INPUTETH THUMEBETH</label>
+            <label for="thumb">INPUTETH Thumbeth</label>
             <input name="thumb" id="thumb">
         </div>
         <div>
@@ -51,46 +74,47 @@
     </ul>
 
      <script>
-        const dialog = document.querySelector("dialog")
-        const logform = dialog.querySelector("form")
-        const btsend = dialog.querySelector(".bt-send")
-        const btdie= dialog.querySelector(".bt-die")
-        const logmsg= dialog.querySelector(".msg")
+        // const dialog = document.querySelector("dialog")
+        // const logform = dialog.querySelector("form")
+        // const btsend = dialog.querySelector(".bt-send")
+        // const btdie= dialog.querySelector(".bt-die")
+        // const logmsg= dialog.querySelector(".msg")
         const filmlist = document.querySelector("ul.film-list")
-        const altform = document.querySelector("form.alt-form") 
+        const altform = document.querySelector("form.alt-form")
+        const btdo = altform.querySelector("button") 
 
         //------------✂-----------------------------------------------------
 
-        if(!localStorage.getItem("token")) {
-            dialog.showModal()
-        } else {
-            listallfilms()
-        }
+        // if(!localStorage.getItem("token")) {
+        //     dialog.showModal()
+        // } else {
+        //     listallfilms()
+        // }
 
-        btsend.addEventListener("click", async ev =>{
-            const { login, senha } = logform
-            const response = await fetch(`/login?login=${login.value}&senha=${senha.value}`)
-            const data = await response.json()
-            if(data.token) {
-                localStorage.setItem('token', data.token)
-                dialog.close()
-                listarallfilms()
-                return
-            }
-            logmsg.innerHTML = `<strong>User and/or password suck.</strong>`
-        })
+        // btsend.addEventListener("click", async ev =>{
+        //     const { login, senha } = logform
+        //     const response = await fetch(`/login?login=${login.value}&senha=${senha.value}`)
+        //     const data = await response.json()
+        //     if(data.token) {
+        //         localStorage.setItem('token', data.token)
+        //         dialog.close()
+        //         listarallfilms()
+        //         return
+        //     }
+        //     logmsg.innerHTML = `<strong>User and/or password suck.</strong>`
+        // })
 
         //------------✂-----------------------------------------------------
         
         async function listallfilms() {
-            const resp = await fetch(`/films?token=${localStorage.getItem("token")}`)
+            const resp = await fetch(`/films`)
             filmlist.innerHTML = ""
             const films = await resp.json()
             films.forEach(film => {
                 filmlist.innerHTML += `
-                    <li>
-                        <strong>Teh TITLETH -- </strong>
-                        ${film.title}
+                    <li class="listItem">
+                        <div class="listGblack"><strong>Teh TITLETH -- </strong>
+                        ${film.title}</div>
                         <ul class="things">
                             <li class="fid">
                                 <strong>Teh ID -- </strong>
@@ -110,19 +134,14 @@
                             </li>
                         </ul>
                         <br>
-                            <button class="deleter">DELETETH</button>
-                            <button class="alterer">ALTERETH</button>
+                            <button class="deleter" data-filmid="${film.id}">DELETETH</button>
+                            <button class="alterer" data-filmid="${film.id}">ALTERETH</button>
                     </li>
                     <br>
                     `
                 })
             }
-        
-        //use target
-        const filmobj = filmlist.querySelector("li button.deleter")
-        filmobj.addEventListener("submit", async ev =>{
-            console.log("Works")
-        })
+            listallfilms()
 
         altform.addEventListener("submit", async ev =>{
             ev.preventDefault()
@@ -136,14 +155,66 @@
                 thumb: altform.thumb.value
             })
 
-            const response = await fetch(`/films?token=${localStorage.getItem("token")}`, {
-                method: "POST",
+            if(btdo.dataset.id) {
+                const id = btdo.dataset.id
+                const res = await fetch(`/films?id=${id}`, {
+                    method: "put",
+                    headers: {"Content-type": "applications/json"},
+                    body
+                })
+                btdo.removeAttribute("data-id")
+                btdo.innerHTML = "DO THINGS"
+                altform.reset()
+                listallfilms()
+            } else {
+                const response = await fetch(`/films`, {
+                method: "post",
                 headers: {"Content-type": "application/json"},
                 body
-            })
-            const result = await response.json()
-            altform.reset()
-            listallfilms()
+                }) //eu salvei um total de 1(uma) linha com esse else, não me julgue.
+                const result = await response.json()
+                altform.reset()
+                listallfilms()
+            }  
+        })
+        //place this in a dialog!!!!
+        filmlist.addEventListener("click", async ev =>{
+            if(ev.target.classList.contains("deleter")) {
+                const id = ev.target.dataset.filmid
+                //console.log(id)
+                if(btdo.dataset.id) {
+                    const btid = btdo.dataset.id
+                    if(id == btid) {
+                        altform.title.value = ""
+                        altform.source.value = ""
+                        altform.description.value = ""
+                        altform.thumb.value = ""
+                        btdo.removeAttribute("data-id")
+                        btdo.innerHTML = "DO THINGS"
+                    }
+                }
+                const resp = await fetch(`/films?id=${id}`, {
+                    method: "delete"
+                })
+                listallfilms()
+                return //too lazy to use else here
+            }
+
+            if(ev.target.classList.contains("alterer")) {
+                const id = ev.target.dataset.filmid
+                const resp = await fetch(`/films?id=${id}`, {
+                    method: "get"
+                })
+                const film = await resp.json()
+                altform.title.value = film.title
+                altform.source.value = film.source
+                altform.description.value = film.description
+                altform.thumb.value = film.thumb
+                btdo.innerText = "OVERWRITE"
+                btdo.dataset.id = id
+                listallfilms()
+                return
+            }
         })
         </script>
 </body>
