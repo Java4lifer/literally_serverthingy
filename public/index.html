@@ -74,40 +74,40 @@
     </ul>
 
      <script>
-        // const dialog = document.querySelector("dialog")
-        // const logform = dialog.querySelector("form")
-        // const btsend = dialog.querySelector(".bt-send")
-        // const btdie= dialog.querySelector(".bt-die")
-        // const logmsg= dialog.querySelector(".msg")
+        const dialog = document.querySelector("dialog")
+        const logform = dialog.querySelector("form")
+        const btsend = dialog.querySelector(".bt-send")
+        const btdie= dialog.querySelector(".bt-die")
+        const logmsg= dialog.querySelector(".msg")
         const filmlist = document.querySelector("ul.film-list")
         const altform = document.querySelector("form.alt-form")
         const btdo = altform.querySelector("button") 
 
         //------------✂-----------------------------------------------------
 
-        // if(!localStorage.getItem("token")) {
-        //     dialog.showModal()
-        // } else {
-        //     listallfilms()
-        // }
+        if(!localStorage.getItem("token")) {
+            dialog.showModal()
+        } else {
+            listallfilms()
+        }
 
-        // btsend.addEventListener("click", async ev =>{
-        //     const { login, senha } = logform
-        //     const response = await fetch(`/login?login=${login.value}&senha=${senha.value}`)
-        //     const data = await response.json()
-        //     if(data.token) {
-        //         localStorage.setItem('token', data.token)
-        //         dialog.close()
-        //         listarallfilms()
-        //         return
-        //     }
-        //     logmsg.innerHTML = `<strong>User and/or password suck.</strong>`
-        // })
+        btsend.addEventListener("click", async ev =>{
+            const { login, senha } = logform
+            const response = await fetch(`/login?login=${login.value}&senha=${senha.value}`)
+            const data = await response.json()
+            if(data.token) {
+                localStorage.setItem('token', data.token)
+                dialog.close()
+                listarallfilms()
+                return
+            }
+            logmsg.innerHTML = `<strong>User and/or password suck.</strong>`
+        })
 
         //------------✂-----------------------------------------------------
         
         async function listallfilms() {
-            const resp = await fetch(`/films`)
+            const resp = await fetch(`/films?token=${localStorage.getItem("token")}`)
             filmlist.innerHTML = ""
             const films = await resp.json()
             films.forEach(film => {
@@ -167,7 +167,7 @@
                 altform.reset()
                 listallfilms()
             } else {
-                const response = await fetch(`/films`, {
+                const response = await fetch(`/films?token=${localStorage.getItem("token")}`, {
                 method: "post",
                 headers: {"Content-type": "application/json"},
                 body
